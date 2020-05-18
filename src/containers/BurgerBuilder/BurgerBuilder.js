@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 
 import Aux from "../../hoc/Auxillary";
 import Burger from "../../components/Burger/Burger";
+import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 class BurgerBuilder extends Component {
 
 	// constructor(props) {
@@ -24,7 +25,7 @@ class BurgerBuilder extends Component {
 		//wrap it in hoc
 		<Aux>
 			<Burger ingredients={this.state.ingredients}/>
-			<div>Build controls</div>
+			<BuildControls />
 		</Aux>
 
 		);
