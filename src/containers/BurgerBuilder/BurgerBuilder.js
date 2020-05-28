@@ -79,6 +79,10 @@ class BurgerBuilder extends Component {
 	purchaseCancelHandler = () => {
 		this.setState({purchasing: false});
 	}
+
+	purchaseContinueHandler = () => {
+		alert('You continue');
+	}
  	//lifecycle method to implement
 	render() {
 
@@ -94,7 +98,10 @@ class BurgerBuilder extends Component {
 		//wrap it in hoc
 		<Aux>
 			<Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}> 
-				<OrderSummary ingredients={this.state.ingredients}/>
+				<OrderSummary ingredients={this.state.ingredients}
+							price={this.state.totalPrice}
+							purchaseCancelled={this.purchaseCancelHandler}
+							purchaseContinued={this.purchaseContinueHandler}/>
 			</Modal>
 			<Burger ingredients={this.state.ingredients}/>
 			<BuildControls 
