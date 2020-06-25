@@ -15,7 +15,11 @@ class ContactData extends Component {
 					type: 'text',
 					placeholder: 'Your name'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				valid: false
 			},
 			street: {
 				elementType: 'input',
@@ -23,7 +27,11 @@ class ContactData extends Component {
 					type: 'text',
 					placeholder: 'Street'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				valid: false
 			},
 			zipcode: {
 				elementType: 'input',
@@ -31,7 +39,13 @@ class ContactData extends Component {
 					type: 'text',
 					placeholder: 'Zipcode'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true,
+					minLength: 5,
+					maxLength: 5
+				},
+				valid: false
 			},
 			email: {
 				elementType: 'input',
@@ -39,7 +53,11 @@ class ContactData extends Component {
 					type: 'email',
 					placeholder: 'Your e-mail'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				valid: false
 			},
 			country: {
 				elementType: 'input',
@@ -47,7 +65,11 @@ class ContactData extends Component {
 					type: 'text',
 					placeholder: 'Country'
 				},
-				value: ''
+				value: '',
+				validation: {
+					required: true
+				},
+				valid: false
 			},
 			deliveryMethod: {
 				elementType: 'select',
@@ -65,12 +87,19 @@ class ContactData extends Component {
 	}
 
 	orderHandler = (event) => {
-		event.preventDefault();
-		console.log(this.props.ingredients);
+		event.preventDefault(); 
+		//Dont want to send a request, which will reload the page..So we are preventing the default happening
+		//console.log(this.props.ingredients);
 		this.setState( {loading: true});
+		const formData = {};
+		
+		for(let formElementIdentifier in this.state.orderForm) {
+			formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+		}
 		const order = {
 			ingredients: this.props.ingredients,
-			price: this.props.price
+			price: this.props.price,
+			orderData: formData
 		}
 		axios.post('/orders.json', order)
 			.then(response => {
@@ -80,9 +109,27 @@ class ContactData extends Component {
 			.catch(error => this.setState({loading: false}));
 	}
 
+	checkValidity(value, rules) {
+
+		let isValid=true;
+		
+		if(rules.required) {
+			isValid = value.trim() !== '' && isValid;
+		}
+		if(rules.minLength) {
+			isValid = value.length >= rules.minLength && isValid;
+		}
+		if(rules.maxLength) {
+			isValid = value.length <= rules.maxLength && isValid;
+		}
+		
+		//console.log(isValid);
+		return isValid;
+	}
+
 	inputChangedHandler = (event, inputIdentifier) => {
-		{/*Using the spread operator for copying all the keys and values in the object, orderForm becoz, 
-		it wont be deeply cloned..So we cannot reach the nested key, value pairs in orderForm. So we need to clone multiple times*/}
+		/*Using the spread operator for copying all the keys and values in the object, orderForm becoz, 
+		it wont be deeply cloned..So we cannot reach the nested key, value pairs in orderForm. So we need to clone multiple times*/
 		const updatedOrderForm = {
 			...this.state.orderForm
 		}
@@ -90,7 +137,9 @@ class ContactData extends Component {
 			...updatedOrderForm[inputIdentifier]
 		};
 		updatedFormElement.value = event.target.value;
+		updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
 		updatedOrderForm[inputIdentifier] = updatedFormElement; 
+		console.log(updatedFormElement);
 		this.setState({orderForm: updatedOrderForm});
 		//console.log(this.state.orderForm);
 	}
@@ -102,9 +151,10 @@ class ContactData extends Component {
 				config: this.state.orderForm[key]
 			});
 		}
+		//console.log(formElementArray);
 
 		let form = (
-				<form>
+				<form onSubmit={this.orderHandler}>
 					{/*<Input elementType='...' elementConfig='...' value='...' />*/}
 					{formElementArray.map(formElement => (
 							<Input 
@@ -114,7 +164,7 @@ class ContactData extends Component {
 								value={formElement.config.value} 
 								changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
 						))}
-					<Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
+					<Button btnType="Success">ORDER</Button>
 				</form>
 		);
 
