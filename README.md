@@ -48,6 +48,9 @@ The higher order components are:
 
 To run the app in development mode:
     1. Clone the github to your local directory
-    2. npm start
+    2. run
+    ```npm start```
 
-Open http://localhost:3000 to view it in the browser.
+Open 
+```http://localhost:3000```
+to view it in the browser.
