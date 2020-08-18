@@ -46,6 +46,9 @@ The higher order components are:
 
   2. Aux: To wrap all the components in a div, whereever necessary
 
+The app uses ```firebase``` for storing the orders, customer info in the database. 
+Also, the app uses `firebase` authentication Rest API for user signin and signup.
+
 To run the app in development mode:
     1. Clone the github to your local directory
     2. run
@@ -54,3 +57,6 @@ To run the app in development mode:
 Open 
 ```http://localhost:3000```
 to view it in the browser.
+
+The app is also hosted in `firebase`. The hosting URL is : 
+```https://react-burger-builder-81094.web.app```
