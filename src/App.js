@@ -66,4 +66,5 @@ const mapDispatchToProps = dispatch => {
     onTryAutoSignUp: () => dispatch(actions.authCheckState())
   }
 }
+//we are wrapping the connect with withRouter to give the App with access to this.props.history so that it can also redirect the user.
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
